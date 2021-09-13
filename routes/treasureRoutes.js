@@ -2,7 +2,7 @@ import { Low, JSONFile } from "lowdb"
 import _ from "lodash"
 import bodyParser from "body-parser"
 
-const adapter = new JSONFile("../huntbot/db/db.json")
+const adapter = new JSONFile("../substrateGo_telegram/db/db.json")
 const db = new Low(adapter)
 
 export default(app) => {
