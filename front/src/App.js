@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   GoogleMap,
   useLoadScript,
@@ -17,6 +17,7 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import { formatRelative } from "date-fns";
+import treasureService from "./services/treasure.service";
 
 import "@reach/combobox/styles.css";
 import mapStyles from "./mapStyles";
@@ -41,19 +42,21 @@ export default function App() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
   });
-  const [markers, setMarkers] = React.useState([]);
-  const [selected, setSelected] = React.useState(null);
+  //const [markers, setMarkers] = React.useState([]);
+  
+  const [treasures, setTreasures] = useState(null);
+  const [selected, setSelected] = useState(null);
 
-  const onMapClick = React.useCallback((e) => {
-    setMarkers((current) => [
-      ...current,
-      {
-        lat: e.latLng.lat(),
-        lng: e.latLng.lng(),
-        time: new Date(),
-      },
-    ]);
-  }, []);
+  useEffect(() => {
+    if (!treasures) {
+      getTreasures();
+    }
+  });
+
+  const getTreasures = async () => {
+    let res = await treasureService.getAll();
+    setTreasures(res);
+  }
 
   const mapRef = React.useRef();
   const onMapLoad = React.useCallback((map) => {
@@ -71,9 +74,9 @@ export default function App() {
   return (
     <div>
       <h1>
-        Bears{" "}
-        <span role="img" aria-label="tent">
-          ⛺️
+        Treasures{" "}
+        <span role="img" aria-label="money">
+          💰
         </span>
       </h1>
 
@@ -86,40 +89,41 @@ export default function App() {
         zoom={8}
         center={center}
         options={options}
-        onClick={onMapClick}
         onLoad={onMapLoad}
       >
-        {markers.map((marker) => (
+        {(treasures && treasures.length > 0) ? (treasures.map((marker) => (
           <Marker
-            key={`${marker.lat}-${marker.lng}`}
-            position={{ lat: marker.lat, lng: marker.lng }}
+            key={`${marker.location.latitude}-${marker.location.longitude}`}
+            position={{ lat: marker.location.latitude, lng: marker.location.longitude }}
             onClick={() => {
               setSelected(marker);
             }}
             icon={{
-              url: `/bear.svg`,
+              url: `/treasure.svg`,
               origin: new window.google.maps.Point(0, 0),
               anchor: new window.google.maps.Point(15, 15),
               scaledSize: new window.google.maps.Size(30, 30),
             }}
           />
-        ))}
+        ))) : (
+          <p>Data is loading...</p>
+        )}
 
         {selected ? (
           <InfoWindow
-            position={{ lat: selected.lat, lng: selected.lng }}
+            position={{ lat: selected.location.latitude, lng: selected.location.longitude }}
             onCloseClick={() => {
               setSelected(null);
             }}
           >
             <div>
               <h2>
-                <span role="img" aria-label="bear">
+                <span role="img" aria-label="treasure">
                   🐻
                 </span>{" "}
-                Alert
+                Treasure is here
               </h2>
-              <p>Spotted {formatRelative(selected.time, new Date())}</p>
+              
             </div>
           </InfoWindow>
         ) : null}
