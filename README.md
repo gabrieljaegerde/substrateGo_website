@@ -1,8 +1,10 @@
-# SubstrateGo Website Frontend
+# SubstrateGo Website
 
 SubstrateGo is a global NFT Treasure hunt game compatible with all Substrate Networks (Polkadot, Kusama etc.). 
 
 Come join the hunt: https://t.me/kusamaGo_bot.
+
+The live version of this website is running at: https://substratego.com
 
 ## Setup
 
@@ -22,7 +24,7 @@ cd ..
 
 create .env file in the root directory of this repo
 
-paste in: `REACT_APP_GOOGLE_MAPS_API_KEY="YOUR_API_KEY_HERE"`
+paste in: `REACT_APP_GOOGLE_MAPS_API_KEY="YOUR_API_KEY_HERE"` and save
 
 npm start (starts server)
 
