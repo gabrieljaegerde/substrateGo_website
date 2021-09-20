@@ -11,7 +11,6 @@ export default(app) => {
     db.chain = _.chain(db.data)
     const treasures = db.chain.get("treasures").filter({ 'active': true }).value()
     const newTreasures = treasures.map(({id, active, message, creator, nft, ...item}) => item)
-    console.log(newTreasures)
     return res.status(200).send(newTreasures)
   })
 }
