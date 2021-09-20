@@ -20,17 +20,15 @@ cd front
 
 npm install
 
-cd ..
-
-create .env file in the root directory of this repo
+create .env file in the `front` directory
 
 paste in: `REACT_APP_GOOGLE_MAPS_API_KEY="YOUR_API_KEY_HERE"` and save
 
-npm start (starts server)
-
-cd front
-
 npm start (starts frontend)
+
+cd..
+
+npm start (starts server)
 
 
 
