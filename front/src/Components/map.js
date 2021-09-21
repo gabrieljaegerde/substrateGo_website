@@ -116,11 +116,12 @@ export const MapComponent = () => {
                         <div>
                             <h2>
                                 <span role="img" aria-label="treasure">
-                                    🐻
-                                </span>{" "}
-                                Treasure is here
+                                    {"💰 Treasure " + selected.name}
+                                </span>
                             </h2>
-
+                            <p>Lat: {selected.location.latitude}</p>
+                            <p>Lon: {selected.location.longitude}</p>
+                            <p>Created on: {selected.timestamp}</p>
                         </div>
                     </InfoWindow>
                 ) : null}
