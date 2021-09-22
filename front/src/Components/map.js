@@ -24,11 +24,7 @@ import MediaQuery from 'react-responsive';
 import { useMediaQuery } from 'react-responsive';
 
 const libraries = ["places"];
-const mapContainerStyle = {
-    position: "relative",
-    height: "100vh",
-    width: "100vw",
-};
+
 
 const center = {
     lat: 43.6532,
@@ -49,13 +45,20 @@ export const MapComponent = () => {
             getTreasures();
         }
     });
-    
+
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
 
     const options = {
         styles: mapStyles,
         disableDefaultUI: true,
         zoomControl: isTabletOrMobile ? false : true,
+    };
+
+    const mapContainerStyle = {
+        position: "relative",
+        height: "100vh",
+        height: "calc(var(--vh, 1vh) * 100)",
+        width: "100vw",
     };
 
     const getTreasures = async () => {
@@ -191,7 +194,8 @@ function Search({ panTo }) {
 
     return (
         <div className="search">
-            <Combobox onSelect={handleSelect}>
+            <Combobox
+                onSelect={handleSelect}>
                 <ComboboxInput
                     value={value}
                     onChange={handleInput}
