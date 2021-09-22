@@ -29,11 +29,7 @@ const mapContainerStyle = {
     height: "100vh",
     width: "100vw",
 };
-const options = {
-    styles: mapStyles,
-    disableDefaultUI: true,
-    zoomControl: true,
-};
+
 const center = {
     lat: 43.6532,
     lng: -79.3832,
@@ -53,6 +49,14 @@ export const MapComponent = () => {
             getTreasures();
         }
     });
+    
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+
+    const options = {
+        styles: mapStyles,
+        disableDefaultUI: true,
+        zoomControl: isTabletOrMobile ? false : true,
+    };
 
     const getTreasures = async () => {
         let res = await treasureService.getAll();
