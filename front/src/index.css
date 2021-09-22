@@ -32,9 +32,9 @@ h1 {
 .search {
   position: absolute;
   top: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
+  left: 40%;
+  transform: translateX(-40%);
+  width: 80%;
   max-width: 400px;
   z-index: 10;
 }
