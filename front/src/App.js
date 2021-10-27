@@ -1,11 +1,11 @@
-import Map from './Components/Map';
-import Header from './Components/Header';
-import Loader from './Components/Loader';
-import Search from './Components/Search';
+import Map from './Components/Map.js';
+import Header from './Components/Header.js';
+import Loader from './Components/Loader.js';
+import Search from './Components/Search.js';
 import { useState, useEffect } from 'react';
 //Main Context
-import { useMainContext } from './Context/Context'
-import treasureService from "./Services/treasure.service";
+import { useMainContext } from './Context/Context.js'
+import treasureService from "./Services/Treasure.Service.js";
 
 
 function App() {
