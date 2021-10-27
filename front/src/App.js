@@ -1,4 +1,4 @@
-import Map from './Components/Map1.js/index.js.js';
+import Map from './Components/Map.js/index.js.js.js';
 import Header from './Components/Header.js';
 import Loader from './Components/Loader.js';
 import Search from './Components/Search.js';
