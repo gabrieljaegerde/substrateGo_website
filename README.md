@@ -14,7 +14,7 @@ For this demo to work, please create a Google Map API Key, and ensure that the t
 - Places API
 - Geocoding API
 
-```npm install```
+### Front End
 
 ```cd front```
 
@@ -22,11 +22,13 @@ For this demo to work, please create a Google Map API Key, and ensure that the t
 
 ```npm run build```
 
-```npm start``` (starts frontend)
+```npm start``` 
 
-```cd ..```
+### Back End
 
-```npm start``` (starts server)
+```npm install```
+
+```npm start```
 
 
 
