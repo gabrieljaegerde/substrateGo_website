@@ -5,7 +5,7 @@ import Search from './Components/Search.js';
 import { useState, useEffect } from 'react';
 //Main Context
 import { useMainContext } from './Context/Context.js'
-import treasureService from "./Services/Treasure.Service.js";
+import treasureService from "./Services/Treasure.Service1.js";
 
 
 function App() {
