@@ -1,7 +1,8 @@
 function Header(props) {
     return (
         <div className="header-bar">
-            SubstrateGo
+            <img src="logo.jpeg" class="logo" alt="logo"/>
+            KusamaGo
         </div>
     );
 }

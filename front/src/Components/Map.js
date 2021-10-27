@@ -37,7 +37,7 @@ function Map({ center, treasureData }) {
     const options = {
         styles: mapStyles,
         disableDefaultUI: true,
-        gestureHandling: 'cooperative',
+        gestureHandling: 'greedy',
         zoomControl: isTabletOrMobile ? false : true,
     };
 
@@ -92,11 +92,11 @@ function Map({ center, treasureData }) {
         }
     }, [selectedTreasure]);
 
-
+    //<Search panTo={panTo} />
     return (
         <div className="map-container">
             <Locate panTo={panTo} />
-            <Search panTo={panTo} />
+            
             <GoogleMapReact
                 bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY }}
                 center={center}

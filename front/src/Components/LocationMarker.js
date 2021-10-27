@@ -10,10 +10,10 @@ function LocationMarker({ lat, lng, onClick, id }) {
         renderColor = "red";
     } else if (id === 2) {
         renderIcon = "emojione:fire";
-        renderColor = "#613";
+        renderColor = "red";
     } else if (id === 3) {
         renderIcon = "oi:map-marker";
-        renderColor = "#613";
+        renderColor = "black";
     }
 
     return (
