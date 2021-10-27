@@ -18,7 +18,7 @@ function LocationMarker({ lat, lng, onClick, id }) {
 
     return (
         <div onClick={onClick}>
-            <Icon icon={renderIcon} color={renderColor} width="22" className="location-icon" />
+            <Icon icon={renderIcon} color={renderColor} className="location-icon" />
         </div>
     );
 }

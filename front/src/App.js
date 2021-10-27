@@ -1,12 +1,13 @@
 import Map from './Components/Map.js';
 import Header from './Components/Header.js';
+import Footer from './Components/Footer.js';
 import Loader from './Components/Loader.js';
 import Search from './Components/Search.js';
 import { useState, useEffect } from 'react';
 //Main Context
 import { useMainContext } from './Context/Context.js'
 import treasureService from "./Services/Treasure.Service.js";
-
+import { useMediaQuery } from 'react-responsive';
 
 function App() {
   const { setTreasureData, reRenderMarkers } = useMainContext();
@@ -33,10 +34,13 @@ function App() {
   }, [reRenderMarkers])
 
 
+  const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
   return (
     <div>
-      <Header />
-      {!loading ? <Map treasureData={treasures} /> : <Loader />}
+      <Header isTabletOrMobile={isTabletOrMobile} treasureCount={treasures.length}/>
+      <Footer />
+      {!loading ? <Map treasureData={treasures} isTabletOrMobile={isTabletOrMobile}/> : <Loader />}
+      
     </div>
   );
 }

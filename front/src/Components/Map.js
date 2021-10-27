@@ -22,7 +22,7 @@ import {
 
 import "@reach/combobox/styles.css";
 
-function Map({ center, treasureData }) {
+function Map({ center, treasureData, isTabletOrMobile }) {
     const { selectedTreasure } = useMainContext();
     const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -31,8 +31,6 @@ function Map({ center, treasureData }) {
     const [bounds, setBounds] = useState(null);
     //Info Box
     const [locationInfo, setLocationInfo] = useState(null);
-
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
     const options = {
         styles: mapStyles,
@@ -93,10 +91,11 @@ function Map({ center, treasureData }) {
     }, [selectedTreasure]);
 
     //<Search panTo={panTo} />
+
     return (
         <div className="map-container">
             <Locate panTo={panTo} />
-            
+
             <GoogleMapReact
                 bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY }}
                 center={center}
@@ -115,7 +114,9 @@ function Map({ center, treasureData }) {
                         bounds.nw.lat
                     ]);
                 }}
-                onClick={() => { setLocationInfo(null); }}
+                onClick={() => 
+                    //setLocationInfo(null)
+                }
                 onDrag={() => setLocationInfo(null)}
             >
                 {clusters.map(cluster => {
@@ -160,8 +161,8 @@ function Map({ center, treasureData }) {
                                     creator: cluster.properties.treasureCreator,
                                     noCollected: cluster.properties.treasureNoCollected
                                 });
-                            }
-                            } />;
+                            }} 
+                        />;
                     }
 
                 })
@@ -256,7 +257,7 @@ Map.defaultProps = {
     center: {
         lat: 29.305561,
         lng: -3.981108
-    }
-};
+    }};
+
 
 export default Map;

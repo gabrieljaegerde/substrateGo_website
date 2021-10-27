@@ -16,29 +16,73 @@ body {
 
 .header-bar {
   width: 100vw;
-  background-color: #ff00cc;
+  background-color: rgb(230, 0, 122);
   color: rgb(0, 0, 0);
-  text-align: center;
   font-weight: bold;
   padding: 10px;
   font-size: 20px;
+  text-align: center;
 }
 
 .logo{
-  width: 50px;
   position: absolute;
+  height: 47px;
   top: 0;
   left: 0;
+}
+
+.treasure-count{
+  position: absolute;
+  right: 0;
+  padding-right: 10px;
+  float: right;
+}
+
+.treasure-icon {
+  padding-top: 3px;
+}
+
+.footer-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 30px;
+  width: 100vw;
+  background-color: white;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px;
+  font-size: 14px;
+}
+
+a:link {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: black;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(230, 0, 122);
+  background-color: transparent;
+  text-decoration: underline;
 }
 
 /*Position Relative is important for location-info*/
 .map-container {
   position: relative;
   width: 100vw;
-  height: 600px;
+  height: calc(100vh - 75px);
 }
 
 .location-icon {
+  width: 30px;
   font-size: 2rem;
   position: relative;
 }
@@ -74,7 +118,7 @@ body {
 
 .cluster-marker {
   color: #fff;
-  background: #ff00cc;
+  background: rgb(230, 0, 122);
   border-radius: 50%;
   padding: 10px;
   display: flex;
@@ -86,13 +130,11 @@ body {
   position: absolute;
   top: 30px;
   left: 30px;
-  width: 400px;
   max-width: 80%;
-  min-height: 200px;
   padding: 20px;
-  background-color: rgba(255, 0, 204, 0.9);
+  background-color: rgba(230, 0, 122, 0.9);
   border-radius: 10px;
-  font-size: 100%;
+  font-size: 14px;
   color: white;
 }
 
