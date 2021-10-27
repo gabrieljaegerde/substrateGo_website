@@ -87,7 +87,7 @@ a:hover {
 .map-container {
   position: relative;
   width: 100vw;
-  height: calc(100vh - 75px);
+  height: calc(600px);
 }
 
 .location-icon {
