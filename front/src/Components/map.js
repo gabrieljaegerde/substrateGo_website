@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
-import {
-    GoogleMap,
-    useLoadScript,
-    Marker,
-    InfoWindow,
-} from "@react-google-maps/api";
+import GoogleMapReact from 'google-map-react';
+import LocationMarker from './LocationMarker';
+import useSuperCluster from 'use-supercluster';
+import React, { useRef, useState, useEffect } from 'react';
+import LocationInfoBox from './LocationInfoBox';
+//Main Context
+import { useMainContext } from '../Context/Context';
+import mapStyles from "../mapStyles";
+import MediaQuery from 'react-responsive';
+import { useMediaQuery } from 'react-responsive';
 import usePlacesAutocomplete, {
     getGeocode,
     getLatLng,
@@ -16,129 +19,163 @@ import {
     ComboboxList,
     ComboboxOption,
 } from "@reach/combobox";
-import treasureService from "../Services/treasure.service";
 
 import "@reach/combobox/styles.css";
-import mapStyles from "../mapStyles";
-import MediaQuery from 'react-responsive';
-import { useMediaQuery } from 'react-responsive';
 
-const libraries = ["places"];
+function Map({ center, treasureData }) {
+    const { selectedTreasure } = useMainContext();
+    const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
+    const mapRef = useRef();
+    const [zoom, setZoom] = useState(1);
+    const [bounds, setBounds] = useState(null);
+    //Info Box
+    const [locationInfo, setLocationInfo] = useState(null);
 
-const center = {
-    lat: 43.6532,
-    lng: -79.3832,
-};
-
-export const MapComponent = () => {
-    const { isLoaded, loadError } = useLoadScript({
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-        libraries,
-    });
-
-    const [treasures, setTreasures] = useState(null);
-    const [selected, setSelected] = useState(null);
-
-    useEffect(() => {
-        if (!treasures) {
-            getTreasures();
-        }
-    });
-
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
     const options = {
         styles: mapStyles,
         disableDefaultUI: true,
+        gestureHandling: 'cooperative',
         zoomControl: isTabletOrMobile ? false : true,
     };
-
-    const mapContainerStyle = {
-        position: "relative",
-        height: "100vh",
-        height: "calc(var(--vh, 1vh) * 100)",
-        width: "100vw",
-    };
-
-    const getTreasures = async () => {
-        let res = await treasureService.getAll();
-        setTreasures(res);
-    }
-
-    const mapRef = React.useRef();
-    const onMapLoad = React.useCallback((map) => {
-        mapRef.current = map;
-    }, []);
 
     const panTo = React.useCallback(({ lat, lng }) => {
         mapRef.current.panTo({ lat, lng });
         mapRef.current.setZoom(14);
     }, []);
 
-    if (loadError) return "Error";
-    if (!isLoaded) return "Loading...";
+    //Index for reference
+    const treasureDataIndex = {
+        1: "New",
+        2: "Popular",
+        3: "Normal"
+    };
+    //Create an Array of its keys
+    let treasureDataIndexNum = Object.keys(treasureDataIndex);
+    treasureDataIndexNum = treasureDataIndexNum.map(index => Number(index));
+
+    //Set up the geo-features. Do not need them anymore.
+    const points = treasureData.map(treasure => ({
+        type: "Feature",
+        properties: {
+            cluster: false,
+            treasureId: treasure.id,
+            treasureName: treasure.name,
+            treasureCreator: treasure.creator,
+            treasureNoCollected: treasure.noCollected,
+            treasureType: treasure.new ? 1 : treasure.popular ? 2 : 3
+        },
+        geometry: {
+            type: "Point",
+            coordinates: [
+                parseFloat(treasure.location.longitude),
+                parseFloat(treasure.location.latitude)
+            ]
+        }
+    }));
+    //Get clusters
+    const { clusters, supercluster } = useSuperCluster({
+        points,
+        bounds,
+        zoom,
+        options: { radius: 75, maxZoom: 20 }
+    });
+    //User has clicked on searched link. They want to go to it
+    useEffect(() => {
+        if (selectedTreasure !== null) {
+            let longitude = selectedTreasure.geometries[0].coordinates[0];
+            let latitude = selectedTreasure.geometries[0].coordinates[1];
+            mapRef.current.panTo({ lat: latitude, lng: longitude });
+            mapRef.current.setZoom(10);
+        }
+    }, [selectedTreasure]);
+
 
     return (
-        <div>
-            <MediaQuery minWidth={1224}>
-                <h1>SubstrateGo</h1>
-            </MediaQuery>
+        <div className="map-container">
             <Locate panTo={panTo} />
             <Search panTo={panTo} />
-
-            <GoogleMap
-                id="map"
-                mapContainerStyle={mapContainerStyle}
-                zoom={8}
+            <GoogleMapReact
+                bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY }}
                 center={center}
+                zoom={zoom}
+                yesIWantToUseGoogleMapApiInternals
                 options={options}
-                onLoad={onMapLoad}
+                onGoogleApiLoaded={({ map }) => {
+                    mapRef.current = map;
+                }}
+                onChange={({ zoom, bounds }) => {
+                    setZoom(zoom);
+                    setBounds([
+                        bounds.nw.lng,
+                        bounds.se.lat,
+                        bounds.se.lng,
+                        bounds.nw.lat
+                    ]);
+                }}
+                onClick={() => { setLocationInfo(null); }}
+                onDrag={() => setLocationInfo(null)}
             >
-                {(treasures && treasures.length > 0) ? (treasures.map((marker) => (
-                    <Marker
-                        key={`${marker.location.latitude}-${marker.location.longitude}`}
-                        position={{ lat: marker.location.latitude, lng: marker.location.longitude }}
-                        onClick={() => {
-                            setSelected(marker);
-                        }}
-                        icon={{
-                            url: `/treasure.svg`,
-                            origin: new window.google.maps.Point(0, 0),
-                            anchor: new window.google.maps.Point(15, 15),
-                            scaledSize: new window.google.maps.Size(30, 30),
-                        }}
-                    />
-                ))) : (
-                    <p>Data is loading...</p>
-                )}
+                {clusters.map(cluster => {
+                    const [longitude, latitude] = cluster.geometry.coordinates;
+                    const { cluster: isCluster, point_count: pointCount } = cluster.properties;
+                    //Used for icon type
+                    const clusterId = cluster.properties.treasureType;
+                    if (isCluster) {
+                        let changeSize = Math.round(pointCount / points.length * 100);
+                        //Can't exceed 40 px
+                        let addSize = Math.min(changeSize * 10, 40);
+                        return (
+                            <section key={cluster.id} lat={latitude} lng={longitude}>
+                                <div className="cluster-marker" style={{
+                                    width: `${addSize + changeSize}px`,
+                                    height: `${addSize + changeSize}px`
+                                }}
+                                    onClick={() => {
+                                        const expansionZoom = Math.min(
+                                            supercluster.getClusterExpansionZoom(cluster.id),
+                                            20
+                                        );
+                                        mapRef.current.setZoom(expansionZoom);
+                                        mapRef.current.panTo({ lat: latitude, lng: longitude });
+                                    }}>
+                                    {pointCount}
+                                </div>
+                            </section>
+                        );
+                    }
+                    //Not a cluster. Just a single point
+                    if (treasureDataIndexNum.indexOf(clusterId) !== -1 && cluster.geometry.coordinates.length === 2) {
+                        return <LocationMarker
+                            lat={latitude}
+                            lng={longitude}
+                            id={clusterId}
+                            key={cluster.properties.treasureId}
+                            onClick={() => {
+                                setLocationInfo({
+                                    id: cluster.properties.treasureId,
+                                    name: cluster.properties.treasureName,
+                                    creator: cluster.properties.treasureCreator,
+                                    noCollected: cluster.properties.treasureNoCollected
+                                });
+                            }
+                            } />;
+                    }
 
-                {selected ? (
-                    <InfoWindow
-                        position={{ lat: selected.location.latitude, lng: selected.location.longitude }}
-                        onCloseClick={() => {
-                            setSelected(null);
-                        }}
-                    >
-                        <div>
-                            <h2>
-                                <span role="img" aria-label="treasure">
-                                    {"💰 Treasure " + selected.name}
-                                </span>
-                            </h2>
-                            <p>Lat: {selected.location.latitude}</p>
-                            <p>Lon: {selected.location.longitude}</p>
-                            <p>Created on: {selected.timestamp}</p>
-                        </div>
-                    </InfoWindow>
-                ) : null}
-            </GoogleMap>
-        </div >
+                })
+                }
+            </GoogleMapReact>
+            {locationInfo && <LocationInfoBox info={locationInfo} />}
+        </div>
     );
 }
 
 function Locate({ panTo }) {
-    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
+    const { setUserPosition } = useMainContext();
+
     return (
         <button
             className={isTabletOrMobile ? "locate locate-bottom" : "locate locate-top"}
@@ -214,3 +251,12 @@ function Search({ panTo }) {
         </div>
     );
 }
+
+Map.defaultProps = {
+    center: {
+        lat: 29.305561,
+        lng: -3.981108
+    }
+};
+
+export default Map;
