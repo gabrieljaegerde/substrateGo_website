@@ -63,7 +63,8 @@ function Map({ center, treasureData, isTabletOrMobile }) {
             treasureName: treasure.name,
             treasureCreator: treasure.creator,
             treasureNoCollected: treasure.noCollected,
-            treasureType: treasure.new ? 1 : treasure.popular ? 2 : 3
+            treasureType: treasure.new ? 1 : treasure.popular ? 2 : 3,
+            treasureHint: treasure.hint
         },
         geometry: {
             type: "Point",
@@ -114,9 +115,6 @@ function Map({ center, treasureData, isTabletOrMobile }) {
                         bounds.nw.lat
                     ]);
                 }}
-                onClick={() => 
-                    //setLocationInfo(null)
-                }
                 onDrag={() => setLocationInfo(null)}
             >
                 {clusters.map(cluster => {
@@ -159,7 +157,8 @@ function Map({ center, treasureData, isTabletOrMobile }) {
                                     id: cluster.properties.treasureId,
                                     name: cluster.properties.treasureName,
                                     creator: cluster.properties.treasureCreator,
-                                    noCollected: cluster.properties.treasureNoCollected
+                                    noCollected: cluster.properties.treasureNoCollected,
+                                    hint: cluster.properties.treasureHint
                                 });
                             }} 
                         />;

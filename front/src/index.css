@@ -33,13 +33,22 @@ body {
 
 .treasure-count{
   position: absolute;
+  top: 0px;
+  font-size: 32px;
   right: 0;
   padding-right: 10px;
-  float: right;
 }
 
 .treasure-icon {
-  padding-top: 3px;
+  height: 32;
+  width: 32;
+}
+
+.listIcon {
+  width: 24px;
+  height: 24px;
+  padding-right: 3px;
+  padding-top: 5px;
 }
 
 .footer-bar {
