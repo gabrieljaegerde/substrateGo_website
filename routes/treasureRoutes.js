@@ -21,7 +21,6 @@ export default (app) => {
         new: (new Date().getTime() - treasure.createdAt.getTime()) < (3 * dayInMs)
       };
     }));
-    console.log("newTreasures", newTreasures)
     return res.status(200).send(newTreasures);
   });
 };
