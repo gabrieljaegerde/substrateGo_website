@@ -14,21 +14,19 @@ For this demo to work, please create a Google Map API Key, and ensure that the t
 - Places API
 - Geocoding API
 
-npm install
+```npm install```
 
-cd front
+```cd front```
 
-npm install
+```npm install```
 
-create .env file in the `front` directory
+```npm run build```
 
-paste in: `REACT_APP_GOOGLE_MAPS_API_KEY="YOUR_API_KEY_HERE"` and save
+```npm start``` (starts frontend)
 
-npm start (starts frontend)
+```cd ..```
 
-cd..
-
-npm start (starts server)
+```npm start``` (starts server)
 
 
 
