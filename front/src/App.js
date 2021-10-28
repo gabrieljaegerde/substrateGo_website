@@ -5,7 +5,7 @@ import Loader from './Components/Loader.js';
 import Search from './Components/Search.js';
 import { useState, useEffect } from 'react';
 //Main Context
-import { useMainContext } from './Context/Context.js'
+import { useMainContext } from './Context/Context.js';
 import treasureService from "./Services/Treasure.Service.js";
 import { useMediaQuery } from 'react-responsive';
 
@@ -23,24 +23,23 @@ function App() {
       //Treasure data is globally accessible. But 'treasures' is just to render out the MAP with the markers
       setTreasureData(res);
       setLoading(false);
-    }
+    };
     fetchTreasures();
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (reRenderMarkers !== null) {
       setTreasures(reRenderMarkers);
     }
-  }, [reRenderMarkers])
-
+  }, [reRenderMarkers]);
 
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
   return (
     <div>
-      <Header isTabletOrMobile={isTabletOrMobile} treasureCount={treasures.length}/>
+      <Header isTabletOrMobile={isTabletOrMobile} treasureCount={treasures.length} />
       <Footer />
-      {!loading ? <Map treasureData={treasures} isTabletOrMobile={isTabletOrMobile}/> : <Loader />}
-      
+      {!loading ? <Map treasureData={treasures} isTabletOrMobile={isTabletOrMobile} /> : <Loader />}
+
     </div>
   );
 }
