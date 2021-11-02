@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { useMainContext } from './Context/Context.js';
 import treasureService from "./Services/Treasure.Service.js";
 import { useMediaQuery } from 'react-responsive';
+import 'react-image-lightbox/style.css';
 
 function App() {
   const { setTreasureData, reRenderMarkers } = useMainContext();
@@ -36,13 +37,8 @@ function App() {
   function resetSize() {
     // reset the body height to that of the inner browser
     let vh = window.innerHeight * 0.01;
-    //let vw = window.innerWidth * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
-    //document.documentElement.style.setProperty('--vw', `${vw}px`);
     document.body.style.height = window.innerHeight + "px";
-    //document.body.style.width = window.innerWidth + "px";
-    console.log("document.body.style.height", window.innerHeight)
-    console.log("document.body.style.width", window.innerWidth)
   }
 
   // reset the height whenever the window's resized
@@ -51,12 +47,13 @@ function App() {
   resetSize();
 
   const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
+  const isMobile = useMediaQuery({ query: '(max-width: 414px)' });
   return (
     <div>
       <Header isTabletOrMobile={isTabletOrMobile} treasureCount={treasures.length} />
+      {!loading ? <Map treasureData={treasures} isTabletOrMobile={isTabletOrMobile} isMobile={isMobile} /> : <Loader />}
+      
       <Footer />
-      {!loading ? <Map treasureData={treasures} isTabletOrMobile={isTabletOrMobile} /> : <Loader />}
-
     </div>
   );
 }

@@ -19,10 +19,11 @@ import {
     ComboboxList,
     ComboboxOption,
 } from "@reach/combobox";
+import Showcase from './Showcase.js';
 
 import "@reach/combobox/styles.css";
 
-function Map({ center, treasureData, isTabletOrMobile }) {
+function Map({ center, treasureData, isTabletOrMobile, isMobile }) {
     const { selectedTreasure } = useMainContext();
     const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
@@ -64,7 +65,11 @@ function Map({ center, treasureData, isTabletOrMobile }) {
             treasureCreator: treasure.creator,
             treasureNoCollected: treasure.noCollected,
             treasureType: treasure.new ? 1 : treasure.popular ? 2 : 3,
-            treasureHint: treasure.hint
+            treasureHint: treasure.hint,
+            treasureLongitude: treasure.location.longitude,
+            treasureLatitude: treasure.location.latitude,
+            treasureVisible: treasure.visible,
+            treasureFile: treasure.file
         },
         geometry: {
             type: "Point",
@@ -94,7 +99,7 @@ function Map({ center, treasureData, isTabletOrMobile }) {
     //<Search panTo={panTo} />
 
     return (
-        <div className="map-container">
+        <div className={isMobile ? "map-container map-container-mobile" : "map-container map-container-non-mobile"}>
             <Locate panTo={panTo} />
 
             <GoogleMapReact
@@ -158,7 +163,11 @@ function Map({ center, treasureData, isTabletOrMobile }) {
                                     name: cluster.properties.treasureName,
                                     creator: cluster.properties.treasureCreator,
                                     noCollected: cluster.properties.treasureNoCollected,
-                                    hint: cluster.properties.treasureHint
+                                    hint: cluster.properties.treasureHint,
+                                    longitude: cluster.properties.treasureLongitude,
+                                    latitude: cluster.properties.treasureLatitude,
+                                    visible: cluster.properties.treasureVisible,
+                                    file: cluster.properties.treasureFile
                                 });
                             }} 
                         />;
@@ -168,6 +177,7 @@ function Map({ center, treasureData, isTabletOrMobile }) {
                 }
             </GoogleMapReact>
             {locationInfo && <LocationInfoBox info={locationInfo} />}
+            {<Showcase treasureData={treasureData} isMobile={isMobile}/>}
         </div>
     );
 }
@@ -178,7 +188,7 @@ function Locate({ panTo }) {
 
     return (
         <button
-            className={isTabletOrMobile ? "locate locate-bottom" : "locate locate-top"}
+            className={"locate locate-top"}
             onClick={() => {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
