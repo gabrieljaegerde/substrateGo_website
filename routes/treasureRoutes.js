@@ -2,7 +2,7 @@ import Treasure from "../models/treasure.js";
 
 export default (app) => {
   app.get("/api/treasures", async (req, res) => {
-    const treasures = await Treasure.find({ "active": true })
+    const treasures = await Treasure.find({ "active": true, location: { $ne: null } })
       .select('_id location name creator hint description file createdAt visible');
     const newTreasures = await Promise.all(treasures.map(async (treasure) => {
       const creator = await treasure.getCreator();
