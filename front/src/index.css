@@ -132,7 +132,7 @@ body {
   height: 30px;
   width: 100vw;
   background-color: white;
-  color: white;
+  color: black;
   text-align: center;
   font-weight: bold;
   padding: 5px;
@@ -238,6 +238,12 @@ a:hover {
   border-radius: 10px;
   font-size: 14px;
   color: white;
+}
+
+.close-icon {
+  position: absolute;
+  right: 20px;
+  cursor: pointer;
 }
 
 .location-info ul {

@@ -7,13 +7,14 @@ import {
     TelegramIcon
 } from "react-share";
 
-function LocationInfoBox({ info }) {
+function LocationInfoBox({ info, setLocationInfo }) {
     const url = info.visible ? info.file : "https://t.me/kusamaGo_bot";
     const title = `Let's collect this NFT treasure together!\n\n` +
         `Location (lng, lat): ${info.longitude}, ${info.latitude}` +
         `${info.file !== "" ? "\n" + info.file : ""}`
     return (
         <div className="location-info">
+            <Icon icon="maki:cross" color="black" className="close-icon" onClick={() => setLocationInfo(null)} />
             <h2>{info.name}</h2>
             <ul>
                 <li><Icon icon="emojione-monotone:id-button" color="black" className="list-icon" />
@@ -31,7 +32,7 @@ function LocationInfoBox({ info }) {
                     <TelegramShareButton
                         url={url}
                         title={title}
-                        className="Demo__some-network__share-button"
+                        className=""
                     >
                         <TelegramIcon size={32} round />
                     </TelegramShareButton>
@@ -39,8 +40,8 @@ function LocationInfoBox({ info }) {
                     <WhatsappShareButton
                         url={url}
                         title={title}
-                        separator="\n"
-                        className="Demo__some-network__share-button"
+                        separator=""
+                        className=""
                     >
                         <WhatsappIcon size={32} round />
                     </WhatsappShareButton>

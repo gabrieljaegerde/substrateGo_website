@@ -4,9 +4,8 @@ import useSuperCluster from 'use-supercluster';
 import React, { useRef, useState, useEffect } from 'react';
 import LocationInfoBox from './LocationInfoBox';
 //Main Context
-import { useMainContext } from '../Context/Context';
-import mapStyles from "../mapStyles";
-import MediaQuery from 'react-responsive';
+import { useMainContext } from '../../Context/Context.js';
+import mapStyles from "../../mapStyles";
 import { useMediaQuery } from 'react-responsive';
 import usePlacesAutocomplete, {
     getGeocode,
@@ -176,7 +175,7 @@ function Map({ center, treasureData, isTabletOrMobile, isMobile }) {
                 })
                 }
             </GoogleMapReact>
-            {locationInfo && <LocationInfoBox info={locationInfo} />}
+            {locationInfo && <LocationInfoBox info={locationInfo} setLocationInfo={setLocationInfo} />}
             {<Showcase treasureData={treasureData} isMobile={isMobile}/>}
         </div>
     );
