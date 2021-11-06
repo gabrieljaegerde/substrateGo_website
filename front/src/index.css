@@ -262,6 +262,7 @@ a:hover {
   position: absolute;
   top: 30px;
   left: 30px;
+  width: 350px;
   max-width: 80%;
   padding: 20px;
   background-color: rgba(230, 0, 122, 0.9);
