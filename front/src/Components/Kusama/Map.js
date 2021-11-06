@@ -91,7 +91,7 @@ function Map({ center, treasureData, isTabletOrMobile, isMobile }) {
             let longitude = selectedTreasure.location.longitude;
             let latitude = selectedTreasure.location.latitude;
             mapRef.current.panTo({ lat: latitude, lng: longitude });
-            mapRef.current.setZoom(10);
+            mapRef.current.setZoom(20);
             if (!isTabletOrMobile) {
                 setLocationInfo({
                     ...selectedTreasure,
