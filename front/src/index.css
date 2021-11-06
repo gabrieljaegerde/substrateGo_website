@@ -49,7 +49,7 @@ body {
   background-color: white;
   color: rgb(0, 0, 0);
   font-weight: bold;
-  padding: 10px;
+  
   font-size: 20px;
   text-align: center;
 }
@@ -61,7 +61,7 @@ body {
   overflow-y: hidden;
   bottom: 0;
   left: 0;
-  height: 125px;
+  height: 135px;
   width: 100vw;
   display: inline-block;
   border-top: 1px solid rgb(230, 0, 122);
@@ -72,7 +72,7 @@ body {
   overflow-y: scroll;
   top: 0px;
   right: -15vw;
-  width: 15vw; 
+  width: 15vw;
   height: calc(100vh - 47px - 30px);
   height: calc((var(--vh, 1vh) * 100) - 47px - 30px);
   border-left: 1px solid rgb(230, 0, 122);
@@ -83,6 +83,7 @@ body {
   position: relative;
   text-align: center;
   font-size: 16px;
+  font-weight: bold;
   bottom: 0;
   left: 0;
   height: 25px;
@@ -92,8 +93,9 @@ body {
 
 .showcase-container-mobile {
   position: absolute;
-  bottom: -155px;
+  bottom: -165px;
   left: 0;
+  display: inline-block;
 }
 
 .showcase-container-non-mobile {
@@ -102,20 +104,44 @@ body {
   right: 0;
 }
 
-.showcase-image-container-mobile {
+.showcase-item-container-mobile {
   display: inline-block;
 }
 
+.showcase-image-container-mobile {
+  display: block;
+  position: relative;
+  height: 100%;
+  border-right: 1px solid rgb(230, 0, 122);
+}
+
+.showcase-image-container-non-mobile {
+  display: block;
+  position: relative;
+  border-bottom: 1px solid rgb(230, 0, 122);
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
 .showcase-image-mobile{
-  max-height: 90px;
+  height: 100px;
   padding: 10px;
   float: none;
   display: inline-block;
 }
 
 .showcase-image-non-mobile{
+  cursor: pointer;
   max-width: 10vw;
   padding: 10px;
+}
+
+.show-location-button {
+  font-size: 12px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .list-icon {
@@ -167,8 +193,8 @@ a:hover {
 
 .map-container-mobile {
   width: 100vw;
-  height: calc(100vh - 47px - 30px - 150px + 15px);
-  height: calc((var(--vh, 1vh) * 100) - 47px - 30px - 150px + 15px);
+  height: calc(100vh - 240px);
+  height: calc((var(--vh, 1vh) * 100) - 235px);
 }
 
 .map-container-non-mobile {
@@ -183,6 +209,10 @@ a:hover {
   transform: translate(-50%, -100%);
   width: 30px;
   font-size: 2rem;
+}
+
+.location-icon-new {
+  background-color: white;
 }
 
 .loader-container {

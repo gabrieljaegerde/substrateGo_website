@@ -23,7 +23,7 @@ import Showcase from './Showcase.js';
 import "@reach/combobox/styles.css";
 
 function Map({ center, treasureData, isTabletOrMobile, isMobile }) {
-    const { selectedTreasure } = useMainContext();
+    const { selectedTreasure, setSelectedTreasure } = useMainContext();
     const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
     const mapRef = useRef();
@@ -88,10 +88,18 @@ function Map({ center, treasureData, isTabletOrMobile, isMobile }) {
     //User has clicked on searched link. They want to go to it
     useEffect(() => {
         if (selectedTreasure !== null) {
-            let longitude = selectedTreasure.geometries[0].coordinates[0];
-            let latitude = selectedTreasure.geometries[0].coordinates[1];
+            let longitude = selectedTreasure.location.longitude;
+            let latitude = selectedTreasure.location.latitude;
             mapRef.current.panTo({ lat: latitude, lng: longitude });
             mapRef.current.setZoom(10);
+            if (!isTabletOrMobile) {
+                setLocationInfo({
+                    ...selectedTreasure,
+                    longitude: selectedTreasure.location.longitude,
+                    latitude: selectedTreasure.location.latitude
+                });
+            }
+            setSelectedTreasure(null);
         }
     }, [selectedTreasure]);
 
@@ -168,7 +176,7 @@ function Map({ center, treasureData, isTabletOrMobile, isMobile }) {
                                     visible: cluster.properties.treasureVisible,
                                     file: cluster.properties.treasureFile
                                 });
-                            }} 
+                            }}
                         />;
                     }
 
@@ -176,7 +184,7 @@ function Map({ center, treasureData, isTabletOrMobile, isMobile }) {
                 }
             </GoogleMapReact>
             {locationInfo && <LocationInfoBox info={locationInfo} setLocationInfo={setLocationInfo} />}
-            {<Showcase treasureData={treasureData} isMobile={isMobile}/>}
+            {<Showcase treasureData={treasureData} isMobile={isMobile} />}
         </div>
     );
 }
@@ -265,7 +273,8 @@ Map.defaultProps = {
     center: {
         lat: 29.305561,
         lng: -3.981108
-    }};
+    }
+};
 
 
 export default Map;

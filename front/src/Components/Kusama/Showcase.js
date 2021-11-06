@@ -3,13 +3,15 @@ import LazyLoad from 'react-lazy-load';
 import { Tween, Timeline } from 'react-gsap';
 import Lightbox from 'react-image-lightbox';
 import React, { useRef, useState, useEffect } from 'react';
+import { useMainContext } from '../../Context/Context.js';
 
 function Showcase({ treasureData, isMobile }) {
+    const { setSelectedTreasure } = useMainContext();
     const [isOpen, setIsOpen] = useState(false);
     const [photoIndex, setPhotoIndex] = useState(0);
-    const [treasureImages, setTreasureImages] = useState(null);
-    
-    if (!treasureImages) {
+    const [treasuresToShow, setTreasuresToShow] = useState(null);
+
+    if (!treasuresToShow) {
         const filteredTreasures = _.chain(treasureData)
             .filter((treasure) => treasure.visible &&
                 treasure.file !== "" &&
@@ -18,29 +20,30 @@ function Showcase({ treasureData, isMobile }) {
         const shuffled = filteredTreasures.sort(() => 0.5 - Math.random());
         const selected = shuffled
             .slice(0, 10 < filteredTreasures.length ? 10 : filteredTreasures.length);
-        let treasureFiles = [];
-        selected.map((treasure) => {
-            treasureFiles.push("https://ipfs.io/ipfs/" + treasure.file);
-        });
-        setTreasureImages(treasureFiles);
+        setTreasuresToShow(selected);
     }
 
-    let listUI = (treasureImages && treasureImages.length > 0) ? (treasureImages.map((image, index) => (
+    let listUI = (treasuresToShow && treasuresToShow.length > 0) ? (treasuresToShow.map((treasure, index) => (
         <LazyLoad
             debounce={false}
             offset={100}
             overflow={true}
-            className={isMobile ? "showcase-image-container-mobile" : ""}>
+            className={isMobile ? "showcase-item-container-mobile" : ""}>
             <Timeline
                 target={
-                    <img src={image}
-                        className={isMobile ? "showcase-image-mobile" : "showcase-image-non-mobile"}
-                        onClick={() => {
-                            console.log("index", index);
-                            setPhotoIndex(index);
-                            setIsOpen(true);
-                        }
-                        } />
+                    <div className={isMobile ? "showcase-image-container-mobile" : "showcase-image-container-non-mobile"}>
+                        <img src={"https://ipfs.io/ipfs/" + treasure.file}
+                            className={isMobile ? "showcase-image-mobile" : "showcase-image-non-mobile"}
+                            onClick={() => {
+                                setPhotoIndex(index);
+                                setIsOpen(true);
+                            }
+                            } />
+                        <div className="show-location-button">
+                            <a href="#"
+                                onClick={() => { setSelectedTreasure(treasure); }}>Show Location</a>
+                        </div>
+                    </div>
                 }>
                 <Tween
                     staggerFrom={{ opacity: 0, y: '-20px' }}
@@ -53,21 +56,21 @@ function Showcase({ treasureData, isMobile }) {
     return (
         <div className={isMobile ? "showcase-container-mobile" : "showcase-container-non-mobile"}>
             <div className={isMobile ? "showcase-header-mobile" : ""}>
-                {isMobile ? "These are amongst them..." : ""}
+                {isMobile ? "Featured" : ""}
             </div>
             <div className={isMobile ? "showcase showcase-mobile" : "showcase showcase-non-mobile"}>
                 {listUI}
                 {isOpen && (
                     <Lightbox
-                        mainSrc={treasureImages[photoIndex]}
-                        nextSrc={treasureImages[(photoIndex + 1) % treasureImages.length]}
-                        prevSrc={treasureImages[(photoIndex + treasureImages.length - 1) % treasureImages.length]}
+                        mainSrc={"https://ipfs.io/ipfs/" + treasuresToShow[photoIndex].file}
+                        nextSrc={"https://ipfs.io/ipfs/" + treasuresToShow[(photoIndex + 1) % treasuresToShow.length].file}
+                        prevSrc={"https://ipfs.io/ipfs/" + treasuresToShow[(photoIndex + treasuresToShow.length - 1) % treasuresToShow.length].file}
                         onCloseRequest={() => setIsOpen(false)}
                         onMovePrevRequest={() =>
-                            setPhotoIndex((photoIndex + treasureImages.length - 1) % treasureImages.length)
+                            setPhotoIndex((photoIndex + treasuresToShow.length - 1) % treasuresToShow.length)
                         }
                         onMoveNextRequest={() =>
-                            setPhotoIndex((photoIndex + 1) % treasureImages.length)
+                            setPhotoIndex((photoIndex + 1) % treasuresToShow.length)
                         }
                     />
                 )}
