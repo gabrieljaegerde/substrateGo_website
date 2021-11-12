@@ -1,9 +1,9 @@
 import express from "express";
-import bodyParser from "body-parser";
 import treasureRoutes from "./routes/treasureRoutes.js";
 import { getDb } from "./tools/config.js";
 import dotenv from "dotenv";
-import * as path from 'path';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 
@@ -11,11 +11,13 @@ dotenv.config();
 
 await getDb();
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 treasureRoutes(app);
 
 if (process.env.NODE_ENV === 'production') {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
   app.use(express.static('front/build'));
 
   app.get('/*', (req, res) => {
